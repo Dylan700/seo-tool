@@ -37,6 +37,11 @@ public class Terminal {
     public boolean processCommand(String command){
         if(command.equalsIgnoreCase("quit") || command.equalsIgnoreCase("exit")){
             return false;
+
+	} else if(command.equalsIgnoreCase("reload") || command.equalsIgnoreCase("refresh")){
+	    checker.refresh();
+	    view.printInfo("Page refreshed.");
+	    view.printInfo(checker.getURL());
         }else if(command.equalsIgnoreCase("check all")){
             List<String> checks = checker.getChecks();
             for(String check : checks){

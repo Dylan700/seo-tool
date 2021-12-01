@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxDriverLogLevel;
 import org.openqa.selenium.firefox.FirefoxOptions;
@@ -64,6 +65,11 @@ public class SEOChecker {
             return checks.get(check).run(driver);
         }
         return new CheckResult(false);
+    }
+
+    public void refresh(){
+	JavascriptExecutor js = (JavascriptExecutor) driver;
+	js.executeScript("window.location.reload(true)");
     }
 
     public boolean hasURL(){
