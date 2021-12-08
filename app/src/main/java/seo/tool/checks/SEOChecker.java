@@ -40,6 +40,9 @@ public class SEOChecker {
         checks.put("meta title", new MetaTitleCheck());
         checks.put("platform", new PlatformCheck());
         checks.put("ssl", new SSLCheck());
+        checks.put("internal linking", new InternalLinkingCheck());
+	checks.put("images", new ImagesCheck());
+	checks.put("broken links", new BrokenLinksCheck());
     }
 
     /**
@@ -61,10 +64,14 @@ public class SEOChecker {
      * @return whether the check was successful
      */
     public CheckResult check(String check){
-        if(checks.containsKey(check)){
-            return checks.get(check).run(driver);
+        try{
+            if(checks.containsKey(check)){
+                return checks.get(check).run(driver);
+            }
+            return new CheckResult(false);
+        }catch(Exception e){
+                return new CheckResult(false, String.format("An error occurred! %s", e.getMessage()));
         }
-        return new CheckResult(false);
     }
 
     public void refresh(){
@@ -90,5 +97,9 @@ public class SEOChecker {
 
     public void quit(){
         driver.quit();
+    }
+
+    public WebDriver getDriver(){
+        return driver;
     }
 }

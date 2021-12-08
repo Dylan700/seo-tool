@@ -4,17 +4,20 @@ import java.util.List;
 
 import seo.tool.checks.CheckResult;
 import seo.tool.checks.SEOChecker;
+import seo.tool.console.command.CommandRegistry;
 
 public class Terminal {
     
     private ConsoleView view;
     private InputSystem input;
     private SEOChecker checker;
+    private CommandRegistry commands;
 
-    public Terminal(ConsoleView view, InputSystem input) {
+    public Terminal(ConsoleView view, InputSystem input, CommandRegistry commands) {
         this.view = view;
         this.input = input;
         this.checker = new SEOChecker();
+        this.commands = commands;
     }
 
     public void run(){
@@ -37,11 +40,13 @@ public class Terminal {
     public boolean processCommand(String command){
         if(command.equalsIgnoreCase("quit") || command.equalsIgnoreCase("exit")){
             return false;
-
-	} else if(command.equalsIgnoreCase("reload") || command.equalsIgnoreCase("refresh")){
-	    checker.refresh();
-	    view.printInfo("Page refreshed.");
-	    view.printInfo(checker.getURL());
+        } else if(commands.get(command.toLowerCase()) != null){
+            commands.get(command.toLowerCase()).execute(input, view, checker.getDriver());
+            return true;
+        } else if(command.equalsIgnoreCase("reload") || command.equalsIgnoreCase("refresh")){
+            checker.refresh();
+            view.printInfo("Page refreshed.");
+            view.printInfo(checker.getURL());
         }else if(command.equalsIgnoreCase("check all")){
             List<String> checks = checker.getChecks();
             for(String check : checks){

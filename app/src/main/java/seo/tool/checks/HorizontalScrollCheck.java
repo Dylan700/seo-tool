@@ -14,10 +14,10 @@ public class HorizontalScrollCheck implements SEOCheck{
     	JavascriptExecutor js = (JavascriptExecutor) driver;
         boolean hasHorizontalScroll = (boolean) js.executeScript("return document.documentElement.scrollWidth > document.documentElement.clientWidth");
 
-	if(hasHorizontalScroll){
-	    return new CheckResult(false, "This page has a horizontal scroll bar!");    
-	}else{
-	    return new CheckResult();
-	}
+		if(hasHorizontalScroll){
+			return new CheckResult(false, "This page has a horizontal scroll bar!");    
+		}else{
+			return new CheckResult();
+		}
     }
 }
