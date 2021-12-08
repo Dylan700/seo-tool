@@ -3,10 +3,10 @@ package seo.tool.console.command;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
 
 import seo.tool.RobotsTXT;
+import seo.tool.XMLBuilder;
 import seo.tool.console.ConsoleView;
 import seo.tool.console.InputSystem;
 
@@ -14,7 +14,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import java.util.List;
-import java.io.Console;
 import java.util.ArrayList;
 
 public class GenerateSitemapCommand implements Command {
@@ -42,9 +41,22 @@ public class GenerateSitemapCommand implements Command {
             view.printError("robots.txt file could not be parsed... ignoring.");
         }
 
-        view.printInfo("Generating the sitemap...");
+        view.printInfo("Finding all pages...");
         generateSitemap(startingPage);
-        view.printInfo(String.format("Sitemap generated. %s pages found.", pages.size()));
+        view.printInfo(String.format("%s pages found.", pages.size()));
+        view.printInfo("Generating sitemap.xml...");
+        String sitemap = generateSitemapXML();
+        view.printInfo("Sitemap.xml generated successfully.");
+        view.printInfo(sitemap);
+    }
+
+    private String generateSitemapXML(){
+        XMLBuilder xml = new XMLBuilder("urlset");
+        xml.addAttribute("xmlns", "http://www.sitemaps.org/schemas/sitemap/0.9");
+        for(String page : pages){
+            xml.addElement("url").addElement("loc").addText(page).up().up();
+        }
+        return xml.build();
     }
 
     // this is a recursive function that will use the current page to start generating a sitemap
