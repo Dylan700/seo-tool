@@ -43,8 +43,14 @@ public class RobotsTXT {
         }
 
         String[] lines = this.robotsTxt.split("\n");
+        List<String> botNames = new ArrayList<String>(1);
+        botNames.add("*");
+        String currentBotName = "*";
         for(String line : lines){
-            if(line.startsWith("Disallow:")){
+            if(line.startsWith("User-agent:")){
+                currentBotName = line.substring(11).trim();
+            }
+            if(line.startsWith("Disallow:") && botNames.contains(currentBotName)){
                 String path = line.substring(line.indexOf(":") + 1).trim();
                 if(path.startsWith("/")){
                     this.disallows.add(path);

@@ -25,4 +25,6 @@ public interface ConsoleView {
 
     public void printChecks(List<String> checks);
 
+    public void setProgress(int progress);
+
 }

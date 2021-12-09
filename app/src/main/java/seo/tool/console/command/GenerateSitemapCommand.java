@@ -24,13 +24,29 @@ public class GenerateSitemapCommand implements Command {
     private InputSystem input;
     private WebDriver driver;
     private RobotsTXT robots;
+    private String sitemap;
 
     @Override
     public void execute(InputSystem input, ConsoleView view, WebDriver driver){
         this.view = view;
         this.input = input;
         this.driver = driver;
+        
+        if(driver.getCurrentUrl().equals(startingPage) && sitemap != null){
+            view.printInfo("Sitemap already exists for this website. Do you want to overwrite it? (y/n)");
+            view.prompt();
+            if(input.getInput().equals("n")){
+                saveSitemap(sitemap);
+                return;
+            }else{
+                view.printInfo("Ok, let's recreate the sitemap then!");
+            }
+        }
+    
+        sitemap = null;
+        robots = null;
         startingPage = driver.getCurrentUrl();
+        pages.clear();
         pages.add(startingPage);
         view.printInfo("Parsing the robots.txt file...");
         robots = new RobotsTXT(startingPage);
@@ -45,9 +61,9 @@ public class GenerateSitemapCommand implements Command {
         generateSitemap(startingPage);
         view.printInfo(String.format("%s pages found.", pages.size()));
         view.printInfo("Generating sitemap.xml...");
-        String sitemap = generateSitemapXML();
+        sitemap = generateSitemapXML();
         view.printInfo("Sitemap.xml generated successfully.");
-        view.printInfo(sitemap);
+        saveSitemap(sitemap);
     }
 
     private String generateSitemapXML(){
@@ -106,5 +122,29 @@ public class GenerateSitemapCommand implements Command {
             return true;
         }
         return false;
+    }
+
+    private void saveSitemap(String sitemap){
+        while(true){
+            view.printInfo("Please enter the path to save the file. (e.g. /home/user/sitemap.xml or /home/user/)");
+            view.prompt();
+            String path = input.getInput();
+            view.printInfo("Saving sitemap.xml...");
+            if(XMLBuilder.save(path, sitemap)){
+                view.printInfo("Sitemap.xml saved successfully.");
+                break;
+            }else{
+                view.printInfo("Unable to save xml! Would you like to try again? or just output to console? (y/n)");
+                view.prompt();
+                String response = input.getInput();
+                if("yes".contains(response.toLowerCase())){
+                    continue;
+                }else{
+                    view.printInfo("Sitemap.xml Dump:");
+                    view.printInfo(sitemap);
+                    break;
+                }
+            }
+        }
     }
 }

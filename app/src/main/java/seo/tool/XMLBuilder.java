@@ -1,5 +1,7 @@
 package seo.tool;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -128,5 +130,47 @@ public class XMLBuilder {
         sb.append("</");
         sb.append(node.getName());
         sb.append(">");
+    }
+
+    // save the file to the specified path and return success or failure
+    public boolean save(String path) {
+        String xml = build();
+        String location = (path.endsWith("/")) ? path + "sitemap.xml" : path + "/siteamp.xml";
+        if(path.endsWith(".xml")){
+            location = path;
+        }
+        try{
+            FileWriter writer = new FileWriter(location);
+            try{
+                writer.write(xml);
+                return true;
+            }catch(IOException e){
+                return false;
+            }finally{
+                writer.close();
+            }
+        }catch(IOException e){
+            return false;
+        }
+    }
+
+    public static boolean save(String path, String xml) {
+        String location = (path.endsWith("/")) ? path + "sitemap.xml" : path + "/siteamp.xml";
+        if(path.endsWith(".xml")){
+            location = path;
+        }
+        try{
+            FileWriter writer = new FileWriter(location);
+            try{
+                writer.write(xml);
+                return true;
+            }catch(IOException e){
+                return false;
+            }finally{
+                writer.close();
+            }
+        }catch(IOException e){
+            return false;
+        }
     }
 }
