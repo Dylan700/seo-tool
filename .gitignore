@@ -7,3 +7,4 @@ bin
 .settings
 .dccache
 .DS_Store
+.vscode
