@@ -18,10 +18,10 @@ public class SEOChecker {
 
     public SEOChecker(){
     	String webdriverPath = System.getenv().get("WEBDRIVER");
-	if(webdriverPath == null){
-		System.out.println("Web driver path is not set. Please set the Environment Variable as 'WEBDRIVER=/path/to/driver'");
-		System.exit(1);
-	}
+        if(webdriverPath == null){
+            System.out.println("Web driver path is not set. Please set the Environment Variable as 'WEBDRIVER=/path/to/driver'");
+            System.exit(1);
+        }
 
         System.setProperty("webdriver.gecko.driver", webdriverPath);
         System.setProperty(FirefoxDriver.SystemProperty.BROWSER_LOGFILE,"/dev/null");
@@ -30,6 +30,10 @@ public class SEOChecker {
         options.setLogLevel(FirefoxDriverLogLevel.FATAL);
         driver = new FirefoxDriver(options);
         addChecks();
+
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            quit();
+        }));
     }
 
     private void addChecks(){
@@ -41,8 +45,8 @@ public class SEOChecker {
         checks.put("platform", new PlatformCheck());
         checks.put("ssl", new SSLCheck());
         checks.put("internal linking", new InternalLinkingCheck());
-	checks.put("images", new ImagesCheck());
-	checks.put("broken links", new BrokenLinksCheck());
+        checks.put("images", new ImagesCheck());
+        checks.put("broken links", new BrokenLinksCheck());
     }
 
     /**
