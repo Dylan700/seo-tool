@@ -134,7 +134,7 @@ public class GenerateSitemapCommand implements Command {
                 view.printInfo("Sitemap.xml saved successfully.");
                 break;
             }else{
-                view.printInfo("Unable to save xml! Would you like to try again? or just output to console? (y/n)");
+                view.printError("Unable to save xml! Would you like to try again? or just output to console? (y/n)");
                 view.prompt();
                 String response = input.getInput();
                 if("yes".contains(response.toLowerCase())){

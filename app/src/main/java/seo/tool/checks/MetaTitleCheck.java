@@ -1,11 +1,9 @@
 package seo.tool.checks;
 
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.By;
 
 import java.util.Locale;
-
-import org.apache.commons.exec.util.StringUtils;
-import org.openqa.selenium.By;
 
 import org.apache.commons.text.similarity.FuzzyScore;
 
