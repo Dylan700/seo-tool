@@ -16,7 +16,7 @@ public class Terminal {
     public Terminal(ConsoleView view, InputSystem input, CommandRegistry commands) {
         this.view = view;
         this.input = input;
-        this.checker = new SEOChecker();
+        this.checker = new SEOChecker(view);
         this.commands = commands;
     }
 

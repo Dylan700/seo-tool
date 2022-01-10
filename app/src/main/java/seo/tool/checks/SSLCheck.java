@@ -18,7 +18,7 @@ public class SSLCheck implements SEOCheck{
         boolean isValid = true;
 	String reason = null;
         Date notAfterDate = null;
-        Date notBeforeDate = null;
+        // Date notBeforeDate = null;
 
         if(isUsingSSL){
             X509Certificate cert = getSSLCertificate(url);
@@ -27,7 +27,7 @@ public class SSLCheck implements SEOCheck{
                 isValid = false;
             }else{
                 notAfterDate = cert.getNotAfter();
-                notBeforeDate = cert.getNotBefore();
+                // notBeforeDate = cert.getNotBefore();
                 // check expiry
                 try{
                     cert.checkValidity(new Date());

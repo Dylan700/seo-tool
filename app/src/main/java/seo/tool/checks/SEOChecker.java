@@ -11,12 +11,16 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxDriverLogLevel;
 import org.openqa.selenium.firefox.FirefoxOptions;
 
+import seo.tool.console.ConsoleView;
+
 public class SEOChecker {
 
     private WebDriver driver;
     private Map<String, SEOCheck> checks = new HashMap<String, SEOCheck>(0);
+    private ConsoleView view;
 
-    public SEOChecker(){
+    public SEOChecker(ConsoleView view){
+        this.view = view;
     	String webdriverPath = System.getenv().get("WEBDRIVER");
         if(webdriverPath == null){
             System.out.println("Web driver path is not set. Please set the Environment Variable as 'WEBDRIVER=/path/to/driver'");
@@ -46,7 +50,7 @@ public class SEOChecker {
         checks.put("ssl", new SSLCheck());
         checks.put("internal linking", new InternalLinkingCheck());
         checks.put("images", new ImagesCheck());
-        checks.put("broken links", new BrokenLinksCheck());
+        checks.put("broken links", new BrokenLinksCheck(view));
     }
 
     /**

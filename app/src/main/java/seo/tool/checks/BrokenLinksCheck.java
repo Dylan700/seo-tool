@@ -2,6 +2,9 @@ package seo.tool.checks;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+
+import seo.tool.console.ConsoleView;
+
 import org.openqa.selenium.By;
 
 import java.net.HttpURLConnection;
@@ -27,19 +30,32 @@ public class BrokenLinksCheck implements SEOCheck{
         }
     };
 
+    private ConsoleView view;
+
+    public BrokenLinksCheck(ConsoleView view){
+        this.view = view;
+    }
+
     @Override
     public CheckResult run(WebDriver driver) {
     	// get all links on the page
         List<WebElement> links = driver.findElements(By.tagName("a"));
+        // set progress to 0
+        view.setProgress(0);
 
         for(WebElement link : links) {
             // get the href attribute of the link
             String href = link.getAttribute("href");
+            
+            // set progress
+            int linkIndex = links.indexOf(link);
+            view.setProgress(Math.max(1, (int) Math.ceil((double) linkIndex / links.size() * 100)));
 
             // if the href is not null, check if it is broken
             if(href != null && (href.toLowerCase().contains("http") || href.startsWith("/"))){
             String url = (href.startsWith("/")) ? driver.getCurrentUrl() + href : href;
             if(isBroken(url)){
+                view.setProgress(100);
                 return new CheckResult(false, "Broken link found: " + href);
             }
         }

@@ -96,7 +96,7 @@ public class ConsoleViewDefault implements ConsoleView {
             if(i == progressChunkCount)
                 System.out.print(progressPointer);
                 
-            if(i < progressChunkCount-1){
+            if(i < progressChunkCount){
                 System.out.print(progressChunk);
             }else{
                 System.out.print(" ");

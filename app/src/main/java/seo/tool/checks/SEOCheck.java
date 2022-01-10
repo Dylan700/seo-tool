@@ -9,7 +9,7 @@ public interface SEOCheck {
 
     /**
      * Perform the SEO check
-     * @param selenium
+     * @param driver
      * @return whether the check was successful
      */
     public CheckResult run(WebDriver driver);
