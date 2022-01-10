@@ -58,6 +58,11 @@ public class SEOChecker {
      * @return true or false if the url was loaded
      */
     public boolean load(String url){
+        // modify the url by adding http if required
+        if(!url.startsWith("http")){
+            url = "http://" + url;
+        }
+
         try {
             driver.get(url);
             return true;
