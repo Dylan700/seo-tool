@@ -49,7 +49,7 @@ public class SEOChecker {
         checks.put("platform", new PlatformCheck());
         checks.put("ssl", new SSLCheck());
         checks.put("internal linking", new InternalLinkingCheck());
-        checks.put("images", new ImagesCheck());
+        checks.put("images", new ImagesCheck(view));
         checks.put("broken links", new BrokenLinksCheck(view));
     }
 

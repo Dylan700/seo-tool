@@ -60,7 +60,7 @@ public class BrokenLinksCheck implements SEOCheck{
             }
         }
     }
-
+        view.setProgress(100);
         return new CheckResult(true, "No broken links found");
     }
 
