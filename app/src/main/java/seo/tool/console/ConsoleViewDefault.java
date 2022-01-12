@@ -45,10 +45,12 @@ public class ConsoleViewDefault implements ConsoleView {
 
     private void startProgress(){
         hasProgress = true;
+        System.out.print(ConsoleView.ANSI_HIDE_CURSOR);
     }
 
     private void endProgress(){
         hasProgress = false;
+        System.out.print(ConsoleView.ANSI_SHOW_CURSOR);
     }
 
     private void resetProgressLine(){
@@ -82,11 +84,11 @@ public class ConsoleViewDefault implements ConsoleView {
         int progressChunkCount = progress / 2;
 
         if(progress == 100){
-            System.out.print("done.");
+            System.out.print(" ");
             for(int i = 0; i < 100; i++){
                 System.out.print(" ");
             }
-            System.out.println();
+            System.out.print(ConsoleView.ANSI_CLEAR_LINE);
             endProgress();
             return;
         }

@@ -14,6 +14,9 @@ public interface ConsoleView {
     public static final String ANSI_PURPLE = "\u001B[35m";
     public static final String ANSI_CYAN = "\u001B[36m";
     public static final String ANSI_WHITE = "\u001B[37m";
+    public static final String ANSI_HIDE_CURSOR = "\u001B[?25l";
+    public static final String ANSI_SHOW_CURSOR = "\u001B[?25h";
+    public static final String ANSI_CLEAR_LINE = "\33[2K\r";
 
     public void printInfo(String message);
 
