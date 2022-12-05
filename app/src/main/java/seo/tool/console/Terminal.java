@@ -1,10 +1,12 @@
 package seo.tool.console;
 
 import java.util.List;
+import java.util.Map;
 
 import seo.tool.checks.CheckResult;
 import seo.tool.checks.SEOChecker;
 import seo.tool.console.command.CommandRegistry;
+import seo.tool.console.command.Command;
 
 public class Terminal {
     
@@ -40,57 +42,17 @@ public class Terminal {
     public boolean processCommand(String command){
         if(command.equalsIgnoreCase("quit") || command.equalsIgnoreCase("exit")){
             return false;
-        } else if(commands.get(command.toLowerCase()) != null){
-            commands.get(command.toLowerCase()).execute(input, view, checker.getDriver());
+        } else if(commands.get(command.toLowerCase().split(" ")[0]) != null){
+            commands.get(command.toLowerCase().split(" ")[0]).execute(command.split(" "), input, view, checker);
             return true;
-        } else if(command.equalsIgnoreCase("reload") || command.equalsIgnoreCase("refresh")){
-            checker.refresh();
-            view.printInfo("Page refreshed.");
-            view.printInfo(checker.getURL());
-        }else if(command.equalsIgnoreCase("check all")){
-            List<String> checks = checker.getChecks();
-            for(String check : checks){
-                runCheck(check);
-            }
-        }else if(command.equalsIgnoreCase("checks")){
-            view.printChecks(checker.getChecks());
-        }else if(command.toLowerCase().startsWith("load ")){
-            view.printInfo("Loading url...");
-            String url = command.substring(5);
-            if(checker.load(url)){
-                view.printInfo("URL loaded successfully.");
-            }else{
-                view.printError("Unable to load url.");
-            }
-        }else if(command.equalsIgnoreCase("url")){
-            view.printInfo("Current url: " + checker.getURL());
-        }else if(command.toLowerCase().startsWith("check ")){
-            String check = command.substring(6);
-            runCheck(check);
+	}else if(command.equalsIgnoreCase("help")){
+		for(Map.Entry<String, Command> commandEntry: commands.getAll()){
+			view.printInfo(String.format("%s - %s", commandEntry.getKey(), commandEntry.getValue().getDescription()));
+		}
         }else{
             view.printError("Command not found.");
         }
         return true;
-    }
-
-    private void runCheck(String check){
-        if(!checker.hasCheck(check)){
-            view.printError("No check with name \"" + check + "\" found.");
-            view.printInfo("Type \"checks\" to get a list of available checks.");
-            return;
-        }
-        view.printInfo("Checking " + check + "...");
-        CheckResult result = checker.check(check);
-        if(result.isSuccessful()){
-            if(result.getMessage() != null){
-                view.printInfo(result.getMessage());
-            }else{
-                view.printInfo("Check for "+check+" passed.");
-            }
-        }else{
-            view.printError("Check for "+check+" failed.");
-            view.printError(result.getMessage());
-        }
     }
 
 }

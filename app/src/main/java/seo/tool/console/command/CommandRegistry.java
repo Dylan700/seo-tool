@@ -2,6 +2,7 @@ package seo.tool.console.command;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 // Basically a map of commands and their string representation
 public class CommandRegistry {
@@ -13,5 +14,9 @@ public class CommandRegistry {
 
     public Command get(String name){
         return commands.get(name);
+    }
+
+    public Set<Map.Entry<String, Command>> getAll(){
+	return commands.entrySet();
     }
 }

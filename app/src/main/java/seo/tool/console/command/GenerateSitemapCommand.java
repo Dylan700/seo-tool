@@ -9,6 +9,7 @@ import seo.tool.RobotsTXT;
 import seo.tool.XMLBuilder;
 import seo.tool.console.ConsoleView;
 import seo.tool.console.InputSystem;
+import seo.tool.checks.SEOChecker;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -27,10 +28,10 @@ public class GenerateSitemapCommand implements Command {
     private String sitemap;
 
     @Override
-    public void execute(InputSystem input, ConsoleView view, WebDriver driver){
+    public void execute(String[] args, InputSystem input, ConsoleView view, SEOChecker checker){
         this.view = view;
         this.input = input;
-        this.driver = driver;
+        this.driver = checker.getDriver();
         
         if(driver.getCurrentUrl().equals(startingPage) && sitemap != null){
             view.printInfo("Sitemap already exists for this website. Do you want to overwrite it? (y/n)");
@@ -146,5 +147,9 @@ public class GenerateSitemapCommand implements Command {
                 }
             }
         }
+    }
+
+    public String getDescription(){
+	    return "Generate a sitemap for the currently loaded url.";
     }
 }

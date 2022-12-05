@@ -8,7 +8,21 @@
 
 plugins {
     // Apply the application plugin to add support for building a CLI application in Java.
+    id 'java'
     id 'application'
+}
+
+test {
+    testLogging {
+      events "passed", "skipped", "failed" , "standardOut", "standardError"
+
+      showExceptions true
+      exceptionFormat "full"
+      showCauses true
+      showStackTraces true
+
+      showStandardStreams = false
+    }
 }
 
 repositories {
@@ -43,23 +57,25 @@ tasks.named('test') {
 run {
 
 	environment "WEBDRIVER", "./src/main/resources/geckodriver"
+}
 
+jar {
+
+	duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+	manifest {
+		attributes(
+		                'Main-Class': 'seo.tool.App'
+				        
+			  )
+			      
+	}
+
+	from {
+		configurations.compileClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+	}
 }
 
 run.standardInput = System.in;
 
-apply plugin: 'java'
-
-  test {
-    testLogging {
-      events "passed", "skipped", "failed" , "standardOut", "standardError"
-
-      showExceptions true
-      exceptionFormat "full"
-      showCauses true
-      showStackTraces true
-
-      showStandardStreams = false
-    }
-  }
 
