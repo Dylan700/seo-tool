@@ -2,6 +2,7 @@ package seo.tool.checks;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.StaleElementReferenceException;
 
 import seo.tool.console.ConsoleView;
 
@@ -16,7 +17,7 @@ public class BrokenLinksCheck implements SEOCheck{
     private static enum HTTPCode {
         BAD_REQUEST(400, true),
         NOT_FOUND(404, true),
-        FORBIDDEN(403, true),
+        //FORBIDDEN(403, true),
         GONE(410, true),
         REQUEST_TIMEOUT(408, true),
         SERVICE_UNAVAILABLE(503, true);
@@ -43,23 +44,28 @@ public class BrokenLinksCheck implements SEOCheck{
         // set progress to 0
         view.setProgress(0);
 
-        for(WebElement link : links) {
-            // get the href attribute of the link
-            String href = link.getAttribute("href");
-            
-            // set progress
-            int linkIndex = links.indexOf(link);
-            view.setProgress(Math.max(1, (int) Math.ceil((double) linkIndex / links.size() * 100)));
+	for(WebElement link : links) {
+	    try{
+		    // get the href attribute of the link
+		    String href = link.getAttribute("href");
+		    
+		    // set progress
+		    int linkIndex = links.indexOf(link);
+		    view.setProgress(Math.max(1, (int) Math.ceil((double) linkIndex / links.size() * 100)));
 
-            // if the href is not null, check if it is broken
-            if(href != null && (href.toLowerCase().contains("http") || href.startsWith("/"))){
-            String url = (href.startsWith("/")) ? driver.getCurrentUrl() + href : href;
-            if(isBroken(url)){
-                view.setProgress(100);
-                return new CheckResult(false, "Broken link found: " + href);
-            }
-        }
-    }
+		    // if the href is not null, check if it is broken
+		    if(href != null && (href.toLowerCase().contains("http") || href.startsWith("/"))){
+			    String url = (href.startsWith("/")) ? driver.getCurrentUrl() + href : href;
+			    if(isBroken(url)){
+				view.setProgress(100);
+				return new CheckResult(false, "Broken link found: " + href);
+			    }
+		    }
+	    }catch(StaleElementReferenceException e){
+		// ignore if any elements are removed from the DOM
+		continue;
+	    }
+	}
         view.setProgress(100);
         return new CheckResult(true, "No broken links found");
     }

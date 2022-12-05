@@ -21,10 +21,15 @@ public class SEOChecker {
 
     public SEOChecker(ConsoleView view){
         this.view = view;
+        addChecks();
+    }
+
+    // initialize the SEOChecker
+    public void init(){
     	String webdriverPath = System.getenv().get("WEBDRIVER");
         if(webdriverPath == null){
-            System.out.println("Web driver path is not set. Please set the Environment Variable as 'WEBDRIVER=/path/to/driver'");
-            System.exit(1);
+            view.printError("Web driver path is not set. Please set the Environment Variable as 'WEBDRIVER=/path/to/driver'");
+	    return;
         }
 
         System.setProperty("webdriver.gecko.driver", webdriverPath);
@@ -33,17 +38,17 @@ public class SEOChecker {
         options.setHeadless(true);
         options.setLogLevel(FirefoxDriverLogLevel.FATAL);
         driver = new FirefoxDriver(options);
-        addChecks();
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             quit();
         }));
+
     }
 
     private void addChecks(){
         checks.put("heading order", new HeadingHierarchyCheck());
         checks.put("heading structure", new HeadingStructureCheck(true));
-	    checks.put("horizontal scroll", new HorizontalScrollCheck());
+	checks.put("horizontal scroll", new HorizontalScrollCheck());
         checks.put("meta description", new MetaDescriptionCheck());
         checks.put("meta title", new MetaTitleCheck());
         checks.put("platform", new PlatformCheck());
@@ -83,6 +88,7 @@ public class SEOChecker {
             }
             return new CheckResult(false);
         }catch(Exception e){
+		view.setProgress(100);
                 return new CheckResult(false, String.format("An error occurred! %s", e.getMessage()));
         }
     }

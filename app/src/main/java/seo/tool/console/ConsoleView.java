@@ -30,4 +30,8 @@ public interface ConsoleView {
 
     public void setProgress(int progress);
 
+    public void startLoading(String message);
+
+    public void endLoading();
+
 }

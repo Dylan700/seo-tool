@@ -12,6 +12,13 @@ plugins {
     id 'application'
 }
 
+// enable preview for text blocks in lower versions of java
+tasks.withType(JavaCompile).each {
+    it.options.compilerArgs.add('--enable-preview')
+}
+
+applicationDefaultJvmArgs += ["--enable-preview"]
+
 test {
     testLogging {
       events "passed", "skipped", "failed" , "standardOut", "standardError"

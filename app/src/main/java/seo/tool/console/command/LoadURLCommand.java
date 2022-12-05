@@ -6,11 +6,15 @@ import seo.tool.checks.SEOChecker;
 
 public class LoadURLCommand implements Command {
 	public void execute(String[] args, InputSystem input, ConsoleView view, SEOChecker checker){
-		view.printInfo("Please enter a URL: ");
+		view.printInfo("Enter a URL");
+		view.prompt();
 		String url = input.getInput();
+		view.startLoading("Loading");
 		if(checker.load(url)){
+			view.endLoading();
 			view.printInfo("URL loaded successfully.");
 		}else{
+			view.endLoading();
 			view.printError("Unable to load url.");
 		}
 	}

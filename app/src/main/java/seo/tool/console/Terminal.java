@@ -24,6 +24,9 @@ public class Terminal {
 
     public void run(){
         view.printWelcome();
+	view.startLoading("Initializing");
+	checker.init();
+	view.endLoading();
         while(true){
             view.prompt();
             String command = input.getInput();

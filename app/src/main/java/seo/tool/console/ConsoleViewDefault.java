@@ -1,11 +1,20 @@
 package seo.tool.console;
 
 import java.util.List;
+import org.apache.commons.lang3.StringUtils;
 
 public class ConsoleViewDefault implements ConsoleView {
 
+    private static String welcomeBanner = """
+   ________  ________   _____ __________     __________  ____  __ 
+  /_  __/ / / / ____/  / ___// ____/ __ \\   /_  __/ __ \\/ __ \\/ / 
+   / / / /_/ / __/     \\__ \\/ __/ / / / /    / / / / / / / / / /  
+  / / / __  / /___    ___/ / /___/ /_/ /    / / / /_/ / /_/ / /___
+ /_/ /_/ /_/_____/   /____/_____/\\____/    /_/  \\____/\\____/_____/""";
+
     private boolean hasProgress = false;
     private int currentProgress = 0;
+    private Thread loadingThread;
 
     @Override
     public void printInfo(String message) {
@@ -17,6 +26,7 @@ public class ConsoleViewDefault implements ConsoleView {
     @Override
     public void printWelcome(){
         resetProgressLine();
+	System.out.printf("%s\n\n", welcomeBanner);
         System.out.printf("Welcome to the SEO Tool\n\n", ConsoleView.ANSI_BLUE, ConsoleView.ANSI_RESET);
     }
 
@@ -106,6 +116,45 @@ public class ConsoleViewDefault implements ConsoleView {
         }
         System.out.print(progressBraceEnd);
         System.out.printf(" %d%%", progress);
+    }
+
+    @Override
+    // start a loading animation concurrently
+    public synchronized void startLoading(String message){
+	if(loadingThread == null){
+		loadingThread = new Thread(() -> {
+			int state = 0;
+			System.out.print(ConsoleView.ANSI_HIDE_CURSOR);
+			while(true){
+				System.out.print(ConsoleView.ANSI_CLEAR_LINE);
+				System.out.printf("%s%s", message, StringUtils.repeat(".", state));
+				if(state > 4){
+					state = 0;
+				}else{
+					state++;
+				}
+				try{
+					loadingThread.sleep(100);
+				}catch(InterruptedException e){
+					continue;
+				}			
+			}
+
+		});
+		loadingThread.start();
+	}	
+	
+    }
+
+    @Override
+    // stop the loading animation
+    public synchronized void endLoading(){
+	    if(loadingThread != null){
+		loadingThread.stop();
+		loadingThread = null;
+		System.out.print(ConsoleView.ANSI_SHOW_CURSOR);
+		System.out.print(ConsoleView.ANSI_CLEAR_LINE);
+	    }
     }
     
 }

@@ -6,7 +6,9 @@ import seo.tool.checks.SEOChecker;
 
 public class ReloadPageCommand implements Command {
 	public void execute(String[] args, InputSystem input, ConsoleView view, SEOChecker checker){
+		view.startLoading("Refreshing Page");
 		checker.refresh();
+		view.endLoading();
 		view.printInfo("Page refreshed.");
 		view.printInfo(checker.getURL());
 	}

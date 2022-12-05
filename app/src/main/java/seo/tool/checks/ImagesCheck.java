@@ -2,6 +2,7 @@ package seo.tool.checks;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.StaleElementReferenceException;
 
 import seo.tool.console.ConsoleView;
 
@@ -26,10 +27,15 @@ public class ImagesCheck implements SEOCheck{
         // check all images have an alt tag
         for(WebElement img : images){
             view.setProgress(Math.max(1, (int) Math.ceil((double) images.indexOf(img) / images.size() * 100)));
-            if(img.getAttribute("alt").isEmpty()){
-                view.setProgress(100);
-                return new CheckResult(false, String.format("Found an image with no alt tag: %s", img.getAttribute("src")));
-            }
+	    try{
+		 if(img.getAttribute("alt").isEmpty()){
+		    view.setProgress(100);
+		    return new CheckResult(false, String.format("Found an image with no alt tag: %s", img.getAttribute("src")));
+		 }
+	    } catch(StaleElementReferenceException e){
+		 // ignore if any elements are removed from the DOM.
+		 continue;
+	    }
         }
         view.setProgress(100);
         return new CheckResult();
