@@ -49,21 +49,23 @@ public class GenerateSitemapCommand implements Command {
         startingPage = driver.getCurrentUrl();
         pages.clear();
         pages.add(startingPage);
-        view.printInfo("Parsing the robots.txt file...");
+        view.startLoading("Parsing the robots.txt file");
         robots = new RobotsTXT(startingPage);
         
         if(robots.parse()){
-            view.printInfo("robots.txt file parsed successfully.");
+	    view.endLoading();
+            view.printSuccess("robots.txt file parsed successfully.");
         }else{
+	    view.endLoading();
             view.printError("robots.txt file could not be parsed... ignoring.");
         }
 
-        view.printInfo("Finding all pages...");
+        view.startLoading("Finding all pages");
         generateSitemap(startingPage);
+	view.endLoading();
         view.printInfo(String.format("%s pages found.", pages.size()));
-        view.printInfo("Generating sitemap.xml...");
         sitemap = generateSitemapXML();
-        view.printInfo("Sitemap.xml generated successfully.");
+        view.printSuccess("Sitemap.xml generated successfully.");
         saveSitemap(sitemap);
     }
 
@@ -78,12 +80,14 @@ public class GenerateSitemapCommand implements Command {
 
     // this is a recursive function that will use the current page to start generating a sitemap
     private void generateSitemap(String currentPage) {
+	view.startLoading("Finding pages");
         // get all <a> tags from the current page and get their hrefs
         List<WebElement> links = driver.findElements(By.tagName("a"));
         List<String> hrefs = new ArrayList<String>(0);
         try{
             hrefs = links.stream().map(link -> link.getAttribute("href")).collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
         }catch(StaleElementReferenceException e){
+	    view.endLoading();
             view.printError("Stale element reference exception... ignoring page " + currentPage);
         }
 
@@ -91,12 +95,17 @@ public class GenerateSitemapCommand implements Command {
         for (String href : hrefs) {
             // if the href is a valid url, navigate to it and generate the sitemap
             if (isValidUrl(href)) {
+		view.endLoading();
                 view.printInfo("Found Page: " + href);
                 pages.add(href);
+		view.startLoading("Finding pages");
                 driver.navigate().to(href);
+		view.endLoading();
                 generateSitemap(href);
+		view.startLoading("Finding pages");
             }
         }
+	view.endLoading();
     }
 
     // a url is valid if it is from the same domain as the starting page or relative, and it is not a duplicate
@@ -130,11 +139,13 @@ public class GenerateSitemapCommand implements Command {
             view.printInfo("Please enter the path to save the file. (e.g. /home/user/sitemap.xml or /home/user/)");
             view.prompt();
             String path = input.getInput();
-            view.printInfo("Saving sitemap.xml...");
+            view.startLoading("Saving sitemap.xml");
             if(XMLBuilder.save(path, sitemap)){
-                view.printInfo("Sitemap.xml saved successfully.");
+		view.endLoading();
+                view.printSuccess("Sitemap.xml saved successfully.");
                 break;
             }else{
+		view.endLoading();
                 view.printError("Unable to save xml! Would you like to try again? or just output to console? (y/n)");
                 view.prompt();
                 String response = input.getInput();
@@ -150,6 +161,6 @@ public class GenerateSitemapCommand implements Command {
     }
 
     public String getDescription(){
-	    return "Generate a sitemap for the currently loaded url.";
+	    return "Generate a sitemap for the currently loaded URL.";
     }
 }

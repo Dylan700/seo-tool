@@ -10,13 +10,14 @@ public class App {
     public static void main(String[] args) {
 
         CommandRegistry commands = new CommandRegistry();
-        commands.add("generate sitemap", new GenerateSitemapCommand());
+        commands.add("generate-sitemap", new GenerateSitemapCommand());
 	commands.add("reload", new ReloadPageCommand());
 	commands.add("checkall", new CheckAllCommand());
 	commands.add("checks", new CheckInfoCommand());
 	commands.add("check", new RunCheckCommand());
 	commands.add("load", new LoadURLCommand());
 	commands.add("url", new GetURLCommand());
+	commands.add("show-meta", new ShowMetaCommand());
 
         Terminal term = new Terminal(new ConsoleViewDefault(), new ConsoleInput(), commands);
         term.run();

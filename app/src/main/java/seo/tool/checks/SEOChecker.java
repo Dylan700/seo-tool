@@ -12,15 +12,18 @@ import org.openqa.selenium.firefox.FirefoxDriverLogLevel;
 import org.openqa.selenium.firefox.FirefoxOptions;
 
 import seo.tool.console.ConsoleView;
+import seo.tool.console.InputSystem;
 
 public class SEOChecker {
 
     private WebDriver driver;
     private Map<String, SEOCheck> checks = new HashMap<String, SEOCheck>(0);
     private ConsoleView view;
+    private InputSystem input;
 
-    public SEOChecker(ConsoleView view){
+    public SEOChecker(ConsoleView view, InputSystem input){
         this.view = view;
+	this.input = input;
         addChecks();
     }
 
@@ -56,6 +59,8 @@ public class SEOChecker {
         checks.put("internal linking", new InternalLinkingCheck());
         checks.put("images", new ImagesCheck(view));
         checks.put("broken links", new BrokenLinksCheck(view));
+        checks.put("keyword density", new KeywordDensityCheck(view, input));
+        checks.put("readability", new ReadabilityCheck(view));
     }
 
     /**
@@ -89,6 +94,7 @@ public class SEOChecker {
             return new CheckResult(false);
         }catch(Exception e){
 		view.setProgress(100);
+		view.endLoading();
                 return new CheckResult(false, String.format("An error occurred! %s", e.getMessage()));
         }
     }

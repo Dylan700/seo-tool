@@ -15,27 +15,45 @@ public class Terminal {
     private SEOChecker checker;
     private CommandRegistry commands;
 
+    private boolean hasQuit = false;
+
     public Terminal(ConsoleView view, InputSystem input, CommandRegistry commands) {
         this.view = view;
         this.input = input;
-        this.checker = new SEOChecker(view);
+        this.checker = new SEOChecker(view, input);
         this.commands = commands;
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            quit();
+        }));
     }
 
     public void run(){
         view.printWelcome();
-	view.startLoading("Initializing");
-	checker.init();
-	view.endLoading();
+        view.startLoading("Initializing");
+        checker.init();
+        view.endLoading();
         while(true){
             view.prompt();
             String command = input.getInput();
             if(!processCommand(command)){
-                input.close();
                 break;
             }
         }
-	checker.quit();
+        quit();
+
+    }
+
+    private synchronized void quit(){
+        if(hasQuit){
+            return;
+        }
+        hasQuit = true;
+        view.endLoading();
+        view.startLoading("Exiting");
+        checker.quit();
+        view.endLoading();
+        view.printInfo("Goodbye!");
+        input.close();
     }
 
     /**
@@ -46,7 +64,13 @@ public class Terminal {
         if(command.equalsIgnoreCase("quit") || command.equalsIgnoreCase("exit")){
             return false;
         } else if(commands.get(command.toLowerCase().split(" ")[0]) != null){
-            commands.get(command.toLowerCase().split(" ")[0]).execute(command.split(" "), input, view, checker);
+		try{
+                	commands.get(command.toLowerCase().split(" ")[0]).execute(command.split(" "), input, view, checker);
+		}catch(Exception e){
+			view.setProgress(100);
+			view.endLoading();
+			view.printError(String.format("Unable to execute command: %s", e.getMessage()));
+		}
             return true;
 	}else if(command.equalsIgnoreCase("help")){
 		for(Map.Entry<String, Command> commandEntry: commands.getAll()){

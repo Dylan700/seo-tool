@@ -17,10 +17,13 @@ public interface ConsoleView {
     public static final String ANSI_HIDE_CURSOR = "\u001B[?25l";
     public static final String ANSI_SHOW_CURSOR = "\u001B[?25h";
     public static final String ANSI_CLEAR_LINE = "\33[2K\r";
+    public static final String ANSI_BG_YELLOW = "\u001b[43;1m";
 
     public void printInfo(String message);
 
     public void printError(String message);
+
+    public void printSuccess(String message);
 
     public void printWelcome();
 
@@ -29,6 +32,8 @@ public interface ConsoleView {
     public void printChecks(List<String> checks);
 
     public void setProgress(int progress);
+
+    public void setProgress(int progress, String status);
 
     public void startLoading(String message);
 

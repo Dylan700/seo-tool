@@ -26,7 +26,7 @@ public class ImagesCheck implements SEOCheck{
 
         // check all images have an alt tag
         for(WebElement img : images){
-            view.setProgress(Math.max(1, (int) Math.ceil((double) images.indexOf(img) / images.size() * 100)));
+            view.setProgress(Math.max(1, (int) Math.ceil((double) images.indexOf(img) / images.size() * 100)), img.getAttribute("src"));
 	    try{
 		 if(img.getAttribute("alt").isEmpty()){
 		    view.setProgress(100);

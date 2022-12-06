@@ -9,7 +9,7 @@ public class ReloadPageCommand implements Command {
 		view.startLoading("Refreshing Page");
 		checker.refresh();
 		view.endLoading();
-		view.printInfo("Page refreshed.");
+		view.printSuccess("Page refreshed.");
 		view.printInfo(checker.getURL());
 	}
 

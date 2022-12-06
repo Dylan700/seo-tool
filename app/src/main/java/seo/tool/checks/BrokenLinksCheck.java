@@ -51,7 +51,7 @@ public class BrokenLinksCheck implements SEOCheck{
 		    
 		    // set progress
 		    int linkIndex = links.indexOf(link);
-		    view.setProgress(Math.max(1, (int) Math.ceil((double) linkIndex / links.size() * 100)));
+		    view.setProgress(Math.max(1, (int) Math.ceil((double) linkIndex / links.size() * 100)), href);
 
 		    // if the href is not null, check if it is broken
 		    if(href != null && (href.toLowerCase().contains("http") || href.startsWith("/"))){

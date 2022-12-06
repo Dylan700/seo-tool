@@ -28,7 +28,7 @@ public class RunCheckCommand implements Command {
 		    if(result.getMessage() != null){
 			view.printInfo(result.getMessage());
 		    }else{
-			view.printInfo("Check for "+check+" passed.");
+			view.printSuccess("Check for "+check+" passed.");
 		    }
 		}else{
 		    view.printError("Check for "+check+" failed.");
