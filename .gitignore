@@ -8,3 +8,4 @@ bin
 .dccache
 .DS_Store
 .vscode
+.env
