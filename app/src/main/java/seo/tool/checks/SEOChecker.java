@@ -8,6 +8,9 @@ import java.util.Map;
 import java.net.URL;
 import java.net.MalformedURLException;
 
+import java.security.GeneralSecurityException;
+import java.io.IOException;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.JavascriptExecutor;
@@ -68,6 +71,13 @@ public class SEOChecker {
         checks.put("broken links", new BrokenLinksCheck(view));
         checks.put("keyword density", new KeywordDensityCheck(view, input));
         checks.put("readability", new ReadabilityCheck(view));
+        checks.put("redirect variations", new RedirectCheck(view));
+        
+        try{
+            checks.put("speed", new SpeedCheck(view));
+        }catch(GeneralSecurityException | IOException e){
+            view.printError("Could not load the speed check. " + e.getMessage());
+        }
     }
 
     /**

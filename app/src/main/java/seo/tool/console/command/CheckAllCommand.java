@@ -30,7 +30,9 @@ public class CheckAllCommand implements Command {
 		    }
 		}else{
 		    view.printError("Check for "+check+" failed.");
-		    view.printError(result.getMessage());
+			if(result.getMessage() != null){
+		    	view.printError(result.getMessage());
+			}
 		}
 	}
 
