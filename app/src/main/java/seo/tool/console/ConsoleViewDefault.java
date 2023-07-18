@@ -137,7 +137,7 @@ public class ConsoleViewDefault implements ConsoleView {
         }
 
         System.out.print(progressBraceStart);
-        for(int i = 0; i < 60; i++){
+        for(int i = 0; i < 50; i++){
             if(i == progressChunkCount)
                 System.out.print(progressPointer);
                 

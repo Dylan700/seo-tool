@@ -24,7 +24,7 @@ public class App {
 		try{
 			commands.add("gconsole", new GoogleConsoleCommand());
 		}catch(Exception e){
-			view.printError("Unable to load Google Console commands." + e.getMessage());
+			view.printError("Unable to load Google Console commands. " + e.getMessage());
 		}
 
 		Terminal term = new Terminal(view, new ConsoleInput(), commands);

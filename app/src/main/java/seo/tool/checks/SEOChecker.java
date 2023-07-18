@@ -5,7 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import java.net.URL;
+import java.net.MalformedURLException;
+
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxDriverLogLevel;
@@ -13,6 +17,8 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 
 import seo.tool.console.ConsoleView;
 import seo.tool.console.InputSystem;
+
+import io.github.cdimascio.dotenv.Dotenv;
 
 public class SEOChecker {
 
@@ -29,18 +35,19 @@ public class SEOChecker {
 
     // initialize the SEOChecker
     public void init(){
-    	String webdriverPath = System.getenv().get("WEBDRIVER");
-        if(webdriverPath == null){
-            view.printError("Web driver path is not set. Please set the Environment Variable as 'WEBDRIVER=/path/to/driver'");
-	    return;
-        }
-
-        System.setProperty("webdriver.gecko.driver", webdriverPath);
         System.setProperty(FirefoxDriver.SystemProperty.BROWSER_LOGFILE,"/dev/null");
         FirefoxOptions options = new FirefoxOptions();
         options.setHeadless(true);
         options.setLogLevel(FirefoxDriverLogLevel.FATAL);
-        driver = new FirefoxDriver(options);
+        try{
+            Dotenv dotenv = Dotenv.load();
+		    String driver_url = dotenv.get("SELENIUM_URL");
+            driver = new RemoteWebDriver(new URL(driver_url), options);
+        }catch(MalformedURLException e){
+            view.printError("Could not create the remote web driver due to a URL error.");
+            view.printError(e.getMessage());
+            return;
+        }
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             quit();

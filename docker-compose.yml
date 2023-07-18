@@ -1,0 +1,11 @@
+services:
+  java: 
+    image: "gradle:7.2-jdk17"
+    volumes: 
+      - ./:/home/gradle
+    command: tail -F afilethatdoesnotexist
+    stdin_open: true
+    tty: true
+  selenium:
+    image: "selenium/standalone-firefox:latest"
+    
