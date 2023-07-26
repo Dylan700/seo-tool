@@ -9,7 +9,7 @@ Before running the command above, you will need to start the selenium remote web
 `docker run --rm -d -p 4444:4444 -p 7900:7900 --shm-size="2g" selenium/standalone-firefox:latest`
 
 ### Docker (Compose Method)
-To start the app, run `docker compose up -d` then connect to the java/gradle container with `docker run -it container_name bash`.
+To start the app, run `docker compose up -d` then connect to the java/gradle container with `docker exec -it container_name bash`.
 
 You can then run the app with `gradle run --console=plain` or you can build it first with `gradle jar` and run the file directly with `java -jar my_jar_file`. Depending on your terminal, the jar file may run better.
 

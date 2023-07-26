@@ -72,6 +72,7 @@ public class SEOChecker {
         checks.put("keyword density", new KeywordDensityCheck(view, input));
         checks.put("readability", new ReadabilityCheck(view));
         checks.put("redirect variations", new RedirectCheck(view));
+        checks.put("secure links", new SecureLinksCheck(view));
         
         try{
             checks.put("speed", new SpeedCheck(view));
