@@ -1,6 +1,7 @@
 services:
   java: 
     image: "gradle:7.2-jdk17"
+    container_name: Gradle
     volumes: 
       - ./:/home/gradle
     command: tail -F afilethatdoesnotexist
@@ -8,4 +9,5 @@ services:
     tty: true
   selenium:
     image: "selenium/standalone-firefox:latest"
+    container_name: Selenium
     
