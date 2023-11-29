@@ -20,6 +20,7 @@ public class App {
 		commands.add("load", new LoadURLCommand());
 		commands.add("url", new GetURLCommand());
 		commands.add("show-meta", new ShowMetaCommand());
+		commands.add("scrape-emails", new ScrapeEmailsCommand());
 		
 		try{
 			commands.add("gconsole", new GoogleConsoleCommand());
